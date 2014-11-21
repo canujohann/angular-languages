@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <title>Multiple languages with $location with Angular</title>
+
+    <!-- Angular -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    
+    <!-- jquery -->
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>    
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+</head>
+
+<body ng-app="myapp">
+
+   <div class="container" ng-controller="mycontroller">
+
+        <div class="jumbotron">
+            <h1>Languages files (Angular)</h1>
+            <p>Use the $location module to easily load languages files.</p>
+        </div>
+
+        <div class="col-md-12">
+       
+            <h2>Data sample</h2>
+
+            <table class="table table-striped">
+                <tr ng-repeat="user in users">
+                    <th>{{user.name}}</th>
+                    <td>{{user.description}}</td>
+                </tr>
+            </table>
+
+            <h2>Script</h2>
+
+            <script src="https://gist.github.com/canujohann/65f2dfcfa70b0ff2c4b0.js"></script>
+
+        </div>
+
+    </div>
+
+
+
+<script>
+
+    var module  = angular.module("myapp", []).config(["$locationProvider", function($locationProvider) {
+          $locationProvider.html5Mode(true); 
+      }]);
+
+    module.controller("mycontroller", function($scope, $http,$location) {
+
+        // Authorized languages
+        var languages = ['en','ja','fr']; 
+        var default_lang = 'ja';
+ 
+        // Get translations according to the 'lang' parameter
+        // Default language is japanese
+        var lang = $location.search()['lang'] || default_lang ;
+        
+        //if not in array, default value
+        if(languages.indexOf(lang) < 0) lang = default_lang ;
+ 
+        //get translation
+        $http.get(lang+'.json').success (function(data){
+          $scope.users = data;
+      });
+
+    });
+
+</script>
+
+</body>
+</html>
